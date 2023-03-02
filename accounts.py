@@ -12,27 +12,6 @@ class Accounts:
     def __init__(self):
         pass
 
-    def _get_response(self, f):
-        try:
-            current_page = f.query.params[ApiParams.PAGE.value]
-        except KeyError as k:
-            return self._get_json(f.url)
-        resp = self._get_json(f.url)
-        if int(current_page) == 0:
-            return resp
-        body_count = len(resp)
-        while body_count < 10000:
-            new_page = int(current_page) + 1
-            f.args[ApiParams.PAGE.value] = new_page
-            try:
-                new_resp = self._get_json(f.url)
-            except Exception as e:
-                return resp
-            body_count += len(new_resp)
-            resp.extend(new_resp)
-            current_page = new_page
-        return resp
-
     def _get_json(self, url: str):
         print(url)
         resp = requests.get(url)
