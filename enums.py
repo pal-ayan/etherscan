@@ -14,6 +14,7 @@ class ApiParams(enum.Enum):
     HASH = "txhash"
     CONTRACTADDR = "contractaddress"
     PAGE = "page"
+    BLOCKTYPE = "blocktype"
 
 
 class AccountsTags(enum.Enum):
@@ -41,3 +42,5 @@ class Const(enum.Enum):
     WEI = 1000000000000000000
     SORT_ASC = "asc"
     SORT_DESC = "desc"
+    BLOCKTYPE_BLOCKS = "blocks"
+    BLOCKTYPE_UNCLES = "uncles"

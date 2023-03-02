@@ -1,4 +1,3 @@
-import json
 import os
 
 import pandas as pd
@@ -13,7 +12,28 @@ class Accounts:
     def __init__(self):
         pass
 
-    def _get_json(self, url: str) -> str:
+    def _get_response(self, f):
+        try:
+            current_page = f.query.params[ApiParams.PAGE.value]
+        except KeyError as k:
+            return self._get_json(f.url)
+        resp = self._get_json(f.url)
+        if int(current_page) == 0:
+            return resp
+        body_count = len(resp)
+        while body_count < 10000:
+            new_page = int(current_page) + 1
+            f.args[ApiParams.PAGE.value] = new_page
+            try:
+                new_resp = self._get_json(f.url)
+            except Exception as e:
+                return resp
+            body_count += len(new_resp)
+            resp.extend(new_resp)
+            current_page = new_page
+        return resp
+
+    def _get_json(self, url: str):
         print(url)
         resp = requests.get(url)
         if resp.status_code == 200:
@@ -51,6 +71,7 @@ class Accounts:
         hash: str = None,
         contract_address: str = None,
         page: int = None,
+        block_type: Const = None,
     ) -> pd.DataFrame:
         f = self._get_base_url()
         self._build_param(f, ApiParams.ACTION.value, action.value)
@@ -62,6 +83,7 @@ class Accounts:
         self._build_param(f, ApiParams.HASH.value, hash)
         self._build_param(f, ApiParams.CONTRACTADDR.value, contract_address)
         self._build_param(f, ApiParams.PAGE.value, page)
+        self._build_param(f, ApiParams.BLOCKTYPE.value, self._get_value(block_type))
 
         try:
             resp = self._get_json(f.url)
@@ -88,8 +110,8 @@ class Accounts:
     def get_normal_transactions(
         self,
         address: str,
-        sort_order: Const,
         limit: int,
+        sort_order: Const = Const.SORT_ASC,
         start_block: int = 0,
         end_block: int = 99999999,
     ) -> pd.DataFrame:
@@ -100,8 +122,8 @@ class Accounts:
     def get_internal_transactions_by_address(
         self,
         address: str,
-        sort_order: Const,
         limit: int,
+        sort_order: Const = Const.SORT_ASC,
         start_block: int = 0,
         end_block: int = 99999999,
     ) -> pd.DataFrame:
@@ -127,8 +149,8 @@ class Accounts:
         self,
         start_block: int,
         end_block: int,
-        sort: Const,
-        page: int = 1,
+        sort: Const = Const.SORT_ASC,
+        page: int = 0,
         limit: int = 10000,
     ) -> pd.DataFrame:
         return self._get_transactions(
@@ -138,6 +160,72 @@ class Accounts:
             sort_order=sort,
             limit=limit,
             page=page,
+        )
+
+    def get_erc20_token_transfer_events(
+        self,
+        address: str,
+        contract_address: str,
+        page: int = 0,
+        limit: int = 10000,
+        sort: Const = Const.SORT_ASC,
+    ) -> pd.DataFrame:
+        return self._get_transactions(
+            action=AccountActions.TOKENTX,
+            address=address,
+            contract_address=contract_address,
+            page=page,
+            limit=limit,
+            sort_order=sort,
+        )
+
+    def get_erc721_token_transfer_events(
+        self,
+        address: str,
+        contract_address: str,
+        page: int = 0,
+        limit: int = 10000,
+        sort: Const = Const.SORT_ASC,
+    ) -> pd.DataFrame:
+        return self._get_transactions(
+            action=AccountActions.TOKENNFTTX,
+            address=address,
+            contract_address=contract_address,
+            page=page,
+            limit=limit,
+            sort_order=sort,
+        )
+
+    def get_erc1155_token_transfer_events(
+        self,
+        address: str,
+        contract_address: str,
+        page: int = 0,
+        limit: int = 10000,
+        sort: Const = Const.SORT_ASC,
+    ) -> pd.DataFrame:
+        return self._get_transactions(
+            action=AccountActions.TOKEN1155TX,
+            address=address,
+            contract_address=contract_address,
+            page=page,
+            limit=limit,
+            sort_order=sort,
+        )
+
+    def get_blocks_mined_by_address(
+        self,
+        address: str,
+        block_type: Const = Const.BLOCKTYPE_BLOCKS,
+        page: int = 0,
+        limit: int = 10000,
+    ) -> pd.DataFrame:
+        return self._get_transactions(
+            action=AccountActions.GETMINEDBLOCKS,
+            address=address,
+            page=page,
+            limit=limit,
+            block_type=block_type,
         )
 
 
@@ -150,6 +238,7 @@ if __name__ == "__main__":
         AccountsTags.LATEST,
     )
     print(bal)
+    
 
     df = acc.get_normal_transactions(
         "0x4AB1BF59F3802f8CD78f9CE488D6778Eac12bAA9", Const.SORT_ASC, 10000
@@ -169,8 +258,13 @@ if __name__ == "__main__":
 
     print(df.head(8))
     """
-    df = acc.get_internal_transactions_by_block_range(
-        14409823, 14409824, Const.SORT_ASC
+    df = acc.get_erc20_token_transfer_events(
+        # address=None,
+        address="0x4e83362442b8d1bec281594cea3050c8eb01311c",
+        # contract_address=None,
+        contract_address="0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2",
+        limit=100,
+        page=0,
     )
 
     print(df.info())
