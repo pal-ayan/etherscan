@@ -2,10 +2,9 @@ import os
 
 import pandas as pd
 import requests
-from dotenv import load_dotenv
 from furl import furl
 
-from enums import AccountActions, AccountsTags, ApiParams, Const, Modules
+from src.enums import AccountActions, AccountsTags, ApiParams, Const, Modules
 
 
 class Accounts:
@@ -89,13 +88,20 @@ class Accounts:
     def get_normal_transactions(
         self,
         address: str,
-        limit: int,
+        limit: int = Const.RESP_LENGTH_LIMIT.value,
         sort_order: Const = Const.SORT_ASC,
         start_block: int = 0,
         end_block: int = 99999999,
+        page: int = 0,
     ) -> pd.DataFrame:
         return self._get_transactions(
-            address, sort_order, limit, AccountActions.TXLIST, start_block, end_block
+            address,
+            sort_order,
+            limit,
+            AccountActions.TXLIST,
+            start_block,
+            end_block,
+            page=page,
         )
 
     def get_internal_transactions_by_address(
@@ -206,44 +212,3 @@ class Accounts:
             limit=limit,
             block_type=block_type,
         )
-
-
-if __name__ == "__main__":
-    load_dotenv()
-    acc = Accounts()
-    """
-    bal = acc.get_balance(
-        "0x4AB1BF59F3802f8CD78f9CE488D6778Eac12bAA9",
-        AccountsTags.LATEST,
-    )
-    print(bal)
-    
-
-    df = acc.get_normal_transactions(
-        "0x4AB1BF59F3802f8CD78f9CE488D6778Eac12bAA9", Const.SORT_ASC, Const.RESP_LENGTH_LIMIT.value
-    )
-
-    print(df.head(8))
-    
-    df = acc.get_internal_transactions_by_address(
-        "0x4AB1BF59F3802f8CD78f9CE4886778Eac12bAA9", Const.SORT_ASC, Const.RESP_LENGTH_LIMIT.value
-    )
-
-    print(df.head(8))
-    
-    df = acc.get_internal_transactions_by_hash(
-        "0x40eb908387324f2b575b4879cd9d7188f69c8fc9d87c901b9e2daaea4b442170"
-    )
-
-    print(df.head(8))
-    """
-    df = acc.get_erc20_token_transfer_events(
-        # address=None,
-        address="0x4e83362442b8d1bec281594cea3050c8eb01311c",
-        # contract_address=None,
-        contract_address="0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2",
-        limit=100,
-        page=0,
-    )
-
-    print(df.info())
