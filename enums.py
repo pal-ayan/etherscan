@@ -44,3 +44,4 @@ class Const(enum.Enum):
     SORT_DESC = "desc"
     BLOCKTYPE_BLOCKS = "blocks"
     BLOCKTYPE_UNCLES = "uncles"
+    RESP_LENGTH_LIMIT = 10_000

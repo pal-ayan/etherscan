@@ -12,7 +12,7 @@ class Accounts:
     def __init__(self):
         pass
 
-    def _get_json(self, url: str):
+    def _get_response_result(self, url: str):
         print(url)
         resp = requests.get(url)
         if resp.status_code == 200:
@@ -65,7 +65,7 @@ class Accounts:
         self._build_param(f, ApiParams.BLOCKTYPE.value, self._get_value(block_type))
 
         try:
-            resp = self._get_json(f.url)
+            resp = self._get_response_result(f.url)
             df = pd.json_normalize(resp)
             return df
         except Exception as e:
@@ -80,7 +80,7 @@ class Accounts:
         f.args[ApiParams.ACTION.value] = AccountActions.BALANCEMULTI.value
         f.args[ApiParams.ADDRESS.value] = ",".join(address)
         f.args[ApiParams.TAG.value] = tag.value
-        resp = self._get_json(f.url)
+        resp = self._get_response_result(f.url)
         ret = {}
         for item in resp:
             ret[item["account"]] = int(item["balance"]) / Const.WEI.value
@@ -130,7 +130,7 @@ class Accounts:
         end_block: int,
         sort: Const = Const.SORT_ASC,
         page: int = 0,
-        limit: int = 10000,
+        limit: int = Const.RESP_LENGTH_LIMIT.value,
     ) -> pd.DataFrame:
         return self._get_transactions(
             action=AccountActions.TXLISTINTERNAL,
@@ -146,7 +146,7 @@ class Accounts:
         address: str,
         contract_address: str,
         page: int = 0,
-        limit: int = 10000,
+        limit: int = Const.RESP_LENGTH_LIMIT.value,
         sort: Const = Const.SORT_ASC,
     ) -> pd.DataFrame:
         return self._get_transactions(
@@ -163,7 +163,7 @@ class Accounts:
         address: str,
         contract_address: str,
         page: int = 0,
-        limit: int = 10000,
+        limit: int = Const.RESP_LENGTH_LIMIT.value,
         sort: Const = Const.SORT_ASC,
     ) -> pd.DataFrame:
         return self._get_transactions(
@@ -180,7 +180,7 @@ class Accounts:
         address: str,
         contract_address: str,
         page: int = 0,
-        limit: int = 10000,
+        limit: int = Const.RESP_LENGTH_LIMIT.value,
         sort: Const = Const.SORT_ASC,
     ) -> pd.DataFrame:
         return self._get_transactions(
@@ -197,7 +197,7 @@ class Accounts:
         address: str,
         block_type: Const = Const.BLOCKTYPE_BLOCKS,
         page: int = 0,
-        limit: int = 10000,
+        limit: int = Const.RESP_LENGTH_LIMIT.value,
     ) -> pd.DataFrame:
         return self._get_transactions(
             action=AccountActions.GETMINEDBLOCKS,
@@ -220,13 +220,13 @@ if __name__ == "__main__":
     
 
     df = acc.get_normal_transactions(
-        "0x4AB1BF59F3802f8CD78f9CE488D6778Eac12bAA9", Const.SORT_ASC, 10000
+        "0x4AB1BF59F3802f8CD78f9CE488D6778Eac12bAA9", Const.SORT_ASC, Const.RESP_LENGTH_LIMIT.value
     )
 
     print(df.head(8))
     
     df = acc.get_internal_transactions_by_address(
-        "0x4AB1BF59F3802f8CD78f9CE4886778Eac12bAA9", Const.SORT_ASC, 10000
+        "0x4AB1BF59F3802f8CD78f9CE4886778Eac12bAA9", Const.SORT_ASC, Const.RESP_LENGTH_LIMIT.value
     )
 
     print(df.head(8))
