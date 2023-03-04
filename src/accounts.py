@@ -1,8 +1,5 @@
-import json
 from typing import List
 
-import pandas as pd
-from furl import furl
 from pydantic import BaseModel, Field
 
 import src.commons as com

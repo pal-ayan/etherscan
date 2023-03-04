@@ -1,10 +1,8 @@
 from __future__ import annotations
 
 import json
-import zlib
 from typing import List, Optional
 
-import pandas as pd
 from furl import furl
 from pydantic import BaseModel
 
