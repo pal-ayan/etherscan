@@ -23,7 +23,7 @@ class AccountsTags(enum.Enum):
     LATEST = "latest"
 
 
-class AccountActions(enum.Enum):
+class ApiActions(enum.Enum):
     BALANCE = "balance"
     BALANCEMULTI = "balancemulti"
     TXLIST = "txlist"
@@ -32,10 +32,12 @@ class AccountActions(enum.Enum):
     TOKENNFTTX = "tokennfttx"
     TOKEN1155TX = "token1155tx"
     GETMINEDBLOCKS = "getminedblocks"
+    GETABI = "getabi"
 
 
 class Modules(enum.Enum):
     ACCOUNT = "account"
+    CONTRACT = "contract"
 
 
 class Const(enum.Enum):

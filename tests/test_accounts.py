@@ -8,7 +8,7 @@ from src.enums import *
 # from . import accounts as accounts
 # from . import enums as enums
 
-# load_dotenv()
+load_dotenv()
 
 
 class TestAccounts(unittest.TestCase):
