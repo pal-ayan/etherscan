@@ -1,3 +1,4 @@
 logs
 .env
 Pipfile.lock
+*/__pycache__/*

@@ -6,6 +6,7 @@ import zlib
 import pandas as pd
 import requests
 from furl import furl
+from pydantic import BaseModel
 
 from src.enums import ApiActions, ApiParams, Const, Modules
 
@@ -29,8 +30,8 @@ def get_response_result(url: str):
     raise Exception("Api Error")
 
 
-def build_param(f: furl, param: str = None, value=None):
-    if param is None or value is None:
+def build_param(f: furl, param: str, value=None):
+    if value is None or (type(value) == str and len(value) == 0):
         return
     f.args[param] = value
 
@@ -87,6 +88,17 @@ def compress(str: str) -> bytes:
 
 def decompress(bytes: bytes) -> str:
     return zlib.decompress(bytes).decode()
+
+
+def generate_model(
+    result_object,
+    model: BaseModel,
+) -> BaseModel:
+    if result_object == None:
+        return None
+    else:
+        result_object = json.loads(json.dumps(result_object))
+        return model.parse_obj(result_object)
 
 
 def multireplace(string, replacements, ignore_case=False):
