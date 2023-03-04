@@ -8,6 +8,7 @@ python-dotenv = "*"
 furl = "*"
 requests = "*"
 pandas = "*"
+pydantic = "*"
 
 [dev-packages]
 

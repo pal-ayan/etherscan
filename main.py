@@ -12,4 +12,6 @@ def run():
 
 
 if __name__ == "__main__":
+    # with open("out.txt", "w") as f:
+    #    print(str.replace("\\n", "\n"), "resources/source_code", file=f)
     run()

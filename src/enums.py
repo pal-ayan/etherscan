@@ -13,6 +13,7 @@ class ApiParams(enum.Enum):
     SORT = "sort"
     HASH = "txhash"
     CONTRACTADDR = "contractaddress"
+    CONTRACTADDRS = "contractaddresses"
     PAGE = "page"
     BLOCKTYPE = "blocktype"
 
@@ -33,6 +34,8 @@ class ApiActions(enum.Enum):
     TOKEN1155TX = "token1155tx"
     GETMINEDBLOCKS = "getminedblocks"
     GETABI = "getabi"
+    GETSOURCECODE = "getsourcecode"
+    GETCONTRACTCREATION = "getcontractcreation"
 
 
 class Modules(enum.Enum):

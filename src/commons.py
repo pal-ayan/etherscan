@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import zlib
 
 import pandas as pd
 import requests
@@ -50,6 +51,7 @@ def get_transactions(
     end_block: int = None,
     hash: str = None,
     contract_address: str = None,
+    contract_addresses: list = [],
     page: int = None,
     block_type: Const = None,
 ):
@@ -62,6 +64,7 @@ def get_transactions(
     build_param(f, ApiParams.SORT.value, get_value(sort_order))
     build_param(f, ApiParams.HASH.value, hash)
     build_param(f, ApiParams.CONTRACTADDR.value, contract_address)
+    build_param(f, ApiParams.CONTRACTADDRS.value, ",".join(contract_addresses))
     build_param(f, ApiParams.PAGE.value, page)
     build_param(f, ApiParams.BLOCKTYPE.value, get_value(block_type))
 
@@ -76,6 +79,14 @@ def get_dataframe(json: json = None) -> pd.DataFrame:
     if json is None:
         return None
     return pd.json_normalize(json)
+
+
+def compress(str: str) -> bytes:
+    return zlib.compress(str.encode())
+
+
+def decompress(bytes: bytes) -> str:
+    return zlib.decompress(bytes).decode()
 
 
 def multireplace(string, replacements, ignore_case=False):
