@@ -3,3 +3,4 @@ logs
 Pipfile.lock
 */__pycache__/*
 .pylintrc
+resources/sample_logs_query.txt
