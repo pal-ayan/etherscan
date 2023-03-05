@@ -19,6 +19,8 @@ class ApiParams(enum.Enum):
     BLOCKNO = "blockno"
     CLOSEST = "closest"
     TIMESTAMP = "timestamp"
+    FROMBLOCK = "fromBlock"
+    TOBLOCK = "toBlock"
 
 
 class AccountsTags(enum.Enum):
@@ -44,6 +46,7 @@ class ApiActions(enum.Enum):
     GETBLOCKREWARD = "getblockreward"
     GETBLOCKCOUNTDOWN = "getblockcountdown"
     GETBLOCKNOBYTIME = "getblocknobytime"
+    GETLOGS = "getLogs"
 
 
 class Modules(enum.Enum):
@@ -51,6 +54,7 @@ class Modules(enum.Enum):
     CONTRACT = "contract"
     TRANSACTION = "transaction"
     BLOCK = "block"
+    LOGS = "logs"
 
 
 class Const(enum.Enum):
@@ -60,5 +64,6 @@ class Const(enum.Enum):
     BLOCKTYPE_BLOCKS = "blocks"
     BLOCKTYPE_UNCLES = "uncles"
     RESP_LENGTH_LIMIT = 10_000
+    RESP_LENGTH_LIMIT_LOGS = 1_000
     BLK_NUM_CLOSEST_BEFORE = "before"
     BLK_NUM_CLOSEST_AFTER = "after"

@@ -19,6 +19,29 @@ def get_base_url(module: Modules) -> furl:
     return f
 
 
+def get_all_pages_in_result(f):
+    resp = get_response_result(f.url)
+    try:
+        current_page = f.query.params[ApiParams.PAGE.value]
+    except KeyError:
+        return resp
+    if int(current_page) == 0:
+        return resp
+    body_count = len(resp)
+    while body_count == int(f.query.params[ApiParams.OFFSET.value]):
+        new_page = int(current_page) + 1
+        f.args[ApiParams.PAGE.value] = new_page
+        try:
+            new_resp = get_response_result(f.url)
+        except Exception as e:
+            print(e)
+            return resp
+        body_count += len(new_resp)
+        resp.extend(new_resp)
+        current_page = new_page
+    return resp
+
+
 def get_response_result(url: str):
     print(url)
     resp = requests.get(url)
@@ -58,6 +81,9 @@ def get_transactions(
     block_number: int = None,
     timestamp: int = None,
     closest: Const = None,
+    fromBlock: int = None,
+    toBlock: int = None,
+    all_pages: int = 0,
 ):
     f = get_base_url(module)
     build_param(f, ApiParams.ACTION.value, action.value)
@@ -74,11 +100,25 @@ def get_transactions(
     build_param(f, ApiParams.BLOCKNO.value, block_number)
     build_param(f, ApiParams.TIMESTAMP.value, timestamp)
     build_param(f, ApiParams.CLOSEST.value, get_value(closest))
+    build_param(f, ApiParams.FROMBLOCK.value, fromBlock)
+    build_param(f, ApiParams.TOBLOCK.value, toBlock)
+
+    if all_pages == 0 and page == 0 and limit < Const.RESP_LENGTH_LIMIT.value:
+        raise Exception(
+            "if 'limit' is other than default, please update the 'page' to a minimum of 1"
+        )
+
+    if all_pages == 1 and page == 0:
+        build_param(f, ApiParams.PAGE.value, 1)
 
     try:
-        return get_response_result(f.url)
+        if all_pages == 1:
+            return get_all_pages_in_result(f)
+        else:
+            return get_response_result(f.url)
     except Exception as e:
-        print(e.args[0], e.args[1])
+        print(e)
+        # print(e.args[0], e.args[1])
         return None
 
 
