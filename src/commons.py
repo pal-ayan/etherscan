@@ -19,6 +19,7 @@ def get_base_url(module: Modules) -> furl:
     return f
 
 
+# TODO: messy code, clean this up
 def get_all_pages_in_result(f):
     resp = get_response_result(f.url)
     try:
@@ -36,7 +37,7 @@ def get_all_pages_in_result(f):
         except Exception as e:
             print(e)
             return resp
-        body_count += len(new_resp)
+        body_count = len(new_resp)
         resp.extend(new_resp)
         current_page = new_page
     return resp

@@ -1,5 +1,7 @@
 import unittest
 
+import pandas as pd
+
 from src.enums import *
 from src.logs import Logs
 
@@ -15,5 +17,5 @@ class TestLogs(unittest.TestCase):
             to_block=12878196,
             limit=50,
         )
-        print(resp.json())
+        print(pd.read_json(resp.json()).info())
         self.assertIsNotNone(resp)
