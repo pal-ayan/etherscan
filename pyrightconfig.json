@@ -1,0 +1,8 @@
+{
+    "exclude": [
+        "tests/*.py"
+    ],
+    "ignore": [
+        "tests/*.py"
+    ]
+}

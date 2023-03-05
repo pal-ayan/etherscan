@@ -15,7 +15,7 @@ class TestBlocks(unittest.TestCase):
         self.assertIsNotNone(resp)
 
     @unittest.skip
-    def test_get_reward(self):
+    def test_get_countdown(self):
         resp = self.blk.get_estimated_blck_countdown(block_number=16761914)
         print(resp)
         self.assertIsNotNone(resp)
