@@ -1,14 +1,7 @@
 import unittest
 
-from dotenv import load_dotenv
-
 from src.accounts import Accounts
 from src.enums import *
-
-# from . import accounts as accounts
-# from . import enums as enums
-
-load_dotenv()
 
 
 class TestAccounts(unittest.TestCase):

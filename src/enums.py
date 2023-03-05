@@ -36,11 +36,14 @@ class ApiActions(enum.Enum):
     GETABI = "getabi"
     GETSOURCECODE = "getsourcecode"
     GETCONTRACTCREATION = "getcontractcreation"
+    GETSTATUS = "getstatus"
+    GETTXRECEIPTSTATUS = "gettxreceiptstatus"
 
 
 class Modules(enum.Enum):
     ACCOUNT = "account"
     CONTRACT = "contract"
+    TRANSACTION = "transaction"
 
 
 class Const(enum.Enum):
