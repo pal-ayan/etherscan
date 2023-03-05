@@ -37,7 +37,9 @@ class Blocks:
         )
         return com.generate_model(resp, Rewards)
 
-    def get_estimated_blck_countdown(self, block_number: int) -> BlockCountDown:
+    def get_estimated_blck_countdown(
+        self, block_number: int
+    ) -> BlockCountDown:
         resp = com.get_transactions(
             module=Modules.BLOCK,
             action=ApiActions.GETBLOCKCOUNTDOWN,

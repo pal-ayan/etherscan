@@ -2,7 +2,6 @@ import unittest
 
 import pandas as pd
 
-from src.enums import *
 from src.logs import Logs
 
 

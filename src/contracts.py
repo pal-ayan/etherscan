@@ -86,7 +86,9 @@ class Contracts:
         address: str,
     ) -> tuple[ContractItem, bytes]:
         resp = com.get_transactions(
-            module=Modules.CONTRACT, address=address, action=ApiActions.GETSOURCECODE
+            module=Modules.CONTRACT,
+            address=address,
+            action=ApiActions.GETSOURCECODE,
         )
         if resp is None:
             return None

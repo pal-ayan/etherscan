@@ -2,3 +2,4 @@ logs
 .env
 Pipfile.lock
 */__pycache__/*
+.pylintrc

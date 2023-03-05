@@ -16,7 +16,9 @@ class ReceiptStatus(BaseModel):
 class Transactions:
     def get_contract_exec_status(self, txhash: str) -> ExecStatus:
         resp = com.get_transactions(
-            hash=txhash, module=Modules.TRANSACTION, action=ApiActions.GETSTATUS
+            hash=txhash,
+            module=Modules.TRANSACTION,
+            action=ApiActions.GETSTATUS,
         )
         return com.generate_model(resp, ExecStatus)
 

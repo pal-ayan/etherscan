@@ -192,7 +192,9 @@ class Accounts:
     def get_balance(self, address: str, tag: AccountsTags) -> str:
         return self.get_balances([address], tag)[address]
 
-    def get_balances(self, address: list[str], tag: AccountsTags) -> dict[str, int]:
+    def get_balances(
+        self, address: list[str], tag: AccountsTags
+    ) -> dict[str, int]:
         f = com.get_base_url(Modules.ACCOUNT)
         f.args[ApiParams.ACTION.value] = ApiActions.BALANCEMULTI.value
         f.args[ApiParams.ADDRESS.value] = ",".join(address)

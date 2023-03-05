@@ -1,6 +1,5 @@
 import json
 import os
-import re
 import zlib
 
 import pandas as pd
@@ -50,7 +49,9 @@ def get_response_result(url: str):
         if resp.json()["status"] == "1":
             return resp.json()["result"]
         else:
-            raise Exception(resp.json()["message"], resp.json()["result"], resp.json())
+            raise Exception(
+                resp.json()["message"], resp.json()["result"], resp.json()
+            )
     raise Exception("Api Error")
 
 
@@ -106,7 +107,8 @@ def get_transactions(
 
     if all_pages == 0 and page == 0 and limit < Const.RESP_LENGTH_LIMIT.value:
         raise Exception(
-            "if 'limit' is other than default, please update the 'page' to a minimum of 1"
+            "if 'limit' is other than default, please update the 'page'"
+            "to a minimum of 1"
         )
 
     if all_pages == 1 and page == 0:
@@ -141,7 +143,7 @@ def generate_model(
     result_object,
     model: BaseModel,
 ) -> BaseModel:
-    if result_object == None:
+    if result_object is None:
         return None
     else:
         result_object = json.loads(json.dumps(result_object))
