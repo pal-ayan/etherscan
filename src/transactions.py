@@ -1,3 +1,5 @@
+from typing import Union
+
 from pydantic import BaseModel
 
 import src.commons as com
@@ -14,7 +16,7 @@ class ReceiptStatus(BaseModel):
 
 
 class Transactions:
-    def get_contract_exec_status(self, txhash: str) -> ExecStatus:
+    def get_contract_exec_status(self, txhash: str) -> Union[None, ExecStatus]:
         resp = com.get_transactions(
             hash=txhash,
             module=Modules.TRANSACTION,
@@ -22,7 +24,7 @@ class Transactions:
         )
         return com.generate_model(resp, ExecStatus)
 
-    def get_receipt_status(self, txhash: str) -> ReceiptStatus:
+    def get_receipt_status(self, txhash: str) -> Union[None, ReceiptStatus]:
         resp = com.get_transactions(
             hash=txhash,
             module=Modules.TRANSACTION,

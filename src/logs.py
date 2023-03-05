@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, List
+from typing import Dict, List, Optional, Union
 
 from pydantic import BaseModel
 
@@ -34,7 +34,7 @@ class Logs:
         page: int = 1,
         limit: int = Const.RESP_LENGTH_LIMIT_LOGS.value,
         all_pages: int = 1,
-    ) -> EventLog:
+    ) -> Union[None, EventLog]:
         resp = com.get_transactions(
             address=address,
             module=Modules.LOGS,
@@ -56,7 +56,7 @@ class Logs:
         topic1: str,
         topic2: str,
         topic3: str,
-        operator: Dict[str, list[str]] = None,
+        operator: Optional[Dict[str, list[str]]] = None,
     ):
 
         """
@@ -75,5 +75,5 @@ class Logs:
                         reason the sequence also matters.
         """
 
-        self._validate_operator(operator)
-        operators: list = self._generate_operator(operator)
+        # self._validate_operator(operator)
+        # operators: list = self._generate_operator(operator)

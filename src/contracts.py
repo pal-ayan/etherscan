@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from furl import furl
 from pydantic import BaseModel
@@ -61,14 +61,14 @@ class Creator(BaseModel):
 
 class Contracts:
     def _get_base_url(self) -> furl:
-        f = com.get_base_url()
+        f = com.get_base_url(Modules.CONTRACT)
         f.args[ApiParams.MODULE.value] = Modules.ACCOUNT.value
         return f
 
     def get_abi_for_verified_contract_src_code(
         self,
         address: str,
-    ) -> ABI:
+    ) -> Union[None, ABI]:
         resp = com.get_transactions(
             module=Modules.CONTRACT, address=address, action=ApiActions.GETABI
         )
@@ -84,14 +84,14 @@ class Contracts:
     def get_src_code_for_vc_src_code(
         self,
         address: str,
-    ) -> tuple[ContractItem, bytes]:
+    ) -> Union[tuple[None, None], tuple[ContractItem, bytes]]:
         resp = com.get_transactions(
             module=Modules.CONTRACT,
             address=address,
             action=ApiActions.GETSOURCECODE,
         )
         if resp is None:
-            return None
+            return None, None
         else:
             d = resp[0]
             compressed_src_code = com.compress(d["SourceCode"])
@@ -102,7 +102,7 @@ class Contracts:
     def get_creator_data(
         self,
         contract_addresses: list,
-    ):
+    ) -> Union[None, Creator]:
         resp = com.get_transactions(
             contract_addresses=contract_addresses,
             module=Modules.CONTRACT,

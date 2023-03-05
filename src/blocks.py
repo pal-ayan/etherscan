@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from pydantic import BaseModel
 
@@ -29,7 +29,9 @@ class Rewards(BaseModel):
 
 
 class Blocks:
-    def get_block_and_uncle_rewards(self, block_number: int) -> Rewards:
+    def get_block_and_uncle_rewards(
+        self, block_number: int
+    ) -> Union[None, Rewards]:
         resp = com.get_transactions(
             module=Modules.BLOCK,
             action=ApiActions.GETBLOCKREWARD,
@@ -39,7 +41,7 @@ class Blocks:
 
     def get_estimated_blck_countdown(
         self, block_number: int
-    ) -> BlockCountDown:
+    ) -> Union[None, BlockCountDown]:
         resp = com.get_transactions(
             module=Modules.BLOCK,
             action=ApiActions.GETBLOCKCOUNTDOWN,
@@ -49,13 +51,15 @@ class Blocks:
 
     def get_block_number_by_ts(
         self, timestamp: int, closest: Const = Const.BLK_NUM_CLOSEST_BEFORE
-    ) -> int:
+    ) -> Union[None, int]:
         resp = com.get_transactions(
             module=Modules.BLOCK,
             action=ApiActions.GETBLOCKNOBYTIME,
             timestamp=timestamp,
             closest=closest,
         )
+        if resp is None:
+            return None
         try:
             return int(resp)
         except TypeError:

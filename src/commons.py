@@ -1,6 +1,7 @@
 import json
 import os
 import zlib
+from typing import Any, Collection, Optional, Type, Union
 
 import pandas as pd
 import requests
@@ -11,7 +12,10 @@ from src.enums import ApiActions, ApiParams, Const, Modules
 
 
 def get_base_url(module: Modules) -> furl:
-    f = furl(os.getenv("MAINNET_BASE_URL"))
+    api_key = os.getenv("MAINNET_BASE_URL")
+    if api_key is None or len(api_key) == 0:
+        raise EnvironmentError("API key is not specified")
+    f = furl(api_key)
     f /= ""
     f.args[ApiParams.APIKEY.value] = os.getenv("API_KEY")
     f.args[ApiParams.MODULE.value] = module.value
@@ -61,31 +65,37 @@ def build_param(f: furl, param: str, value=None):
     f.args[param] = value
 
 
-def get_value(value: None):
+def get_value(value: Union[Const, None] = None) -> Union[None, str, int]:
     if value is None:
         return None
     return value.value
 
 
+def generate_csv(value: Union[Collection[str], None] = None):
+    if value is None:
+        return None
+    return ",".join(value)
+
+
 def get_transactions(
     module: Modules,
-    address: str = None,
-    sort_order: Const = None,
-    limit: int = None,
-    action: ApiActions = None,
-    start_block: int = None,
-    end_block: int = None,
-    hash: str = None,
-    contract_address: str = None,
-    contract_addresses: list = [],
-    page: int = None,
-    block_type: Const = None,
-    block_number: int = None,
-    timestamp: int = None,
-    closest: Const = None,
-    fromBlock: int = None,
-    toBlock: int = None,
-    all_pages: int = 0,
+    action: ApiActions,
+    address: Optional[str] = None,
+    sort_order: Optional[Const] = None,
+    limit: Optional[int] = None,
+    start_block: Optional[int] = None,
+    end_block: Optional[int] = None,
+    hash: Optional[str] = None,
+    contract_address: Optional[str] = None,
+    contract_addresses: Optional[Collection[str]] = None,
+    page: Optional[int] = None,
+    block_type: Optional[Const] = None,
+    block_number: Optional[int] = None,
+    timestamp: Optional[int] = None,
+    closest: Optional[Const] = None,
+    fromBlock: Optional[int] = None,
+    toBlock: Optional[int] = None,
+    all_pages: Optional[int] = 0,
 ):
     f = get_base_url(module)
     build_param(f, ApiParams.ACTION.value, action.value)
@@ -96,7 +106,9 @@ def get_transactions(
     build_param(f, ApiParams.SORT.value, get_value(sort_order))
     build_param(f, ApiParams.HASH.value, hash)
     build_param(f, ApiParams.CONTRACTADDR.value, contract_address)
-    build_param(f, ApiParams.CONTRACTADDRS.value, ",".join(contract_addresses))
+    build_param(
+        f, ApiParams.CONTRACTADDRS.value, generate_csv(contract_addresses)
+    )
     build_param(f, ApiParams.PAGE.value, page)
     build_param(f, ApiParams.BLOCKTYPE.value, get_value(block_type))
     build_param(f, ApiParams.BLOCKNO.value, block_number)
@@ -105,11 +117,12 @@ def get_transactions(
     build_param(f, ApiParams.FROMBLOCK.value, fromBlock)
     build_param(f, ApiParams.TOBLOCK.value, toBlock)
 
-    if all_pages == 0 and page == 0 and limit < Const.RESP_LENGTH_LIMIT.value:
-        raise Exception(
-            "if 'limit' is other than default, please update the 'page'"
-            "to a minimum of 1"
-        )
+    if all_pages == 0 and page == 0:
+        if limit is not None and limit < Const.RESP_LENGTH_LIMIT.value:
+            raise Exception(
+                "if 'limit' is other than default, please update the 'page'"
+                "to a minimum of 1"
+            )
 
     if all_pages == 1 and page == 0:
         build_param(f, ApiParams.PAGE.value, 1)
@@ -121,11 +134,11 @@ def get_transactions(
             return get_response_result(f.url)
     except Exception as e:
         print(e)
-        # print(e.args[0], e.args[1])
+        # print(–.args[0], e.args[1])
         return None
 
 
-def get_dataframe(json: json = None) -> pd.DataFrame:
+def get_dataframe(json=None) -> Union[None, pd.DataFrame]:
     if json is None:
         return None
     return pd.json_normalize(json)
@@ -141,8 +154,8 @@ def decompress(bytes: bytes) -> str:
 
 def generate_model(
     result_object,
-    model: BaseModel,
-) -> BaseModel:
+    model: Type[BaseModel],
+) -> Union[None, Any]:
     if result_object is None:
         return None
     else:

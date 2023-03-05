@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional, Union
 
 from pydantic import BaseModel, Field
 
@@ -164,16 +164,16 @@ class NormalTransaction(BaseModel):
 class Accounts:
     def _get_result(
         self,
-        address: str = None,
-        sort_order: Const = None,
-        limit: int = None,
-        action: ApiActions = None,
-        start_block: int = None,
-        end_block: int = None,
-        hash: str = None,
-        contract_address: str = None,
-        page: int = None,
-        block_type: Const = None,
+        action: ApiActions,
+        address: Optional[str] = None,
+        sort_order: Optional[Const] = None,
+        limit: Optional[int] = None,
+        start_block: Optional[int] = None,
+        end_block: Optional[int] = None,
+        hash: Optional[str] = None,
+        contract_address: Optional[str] = None,
+        block_type: Optional[Const] = None,
+        page: Optional[int] = None,
     ):
         return com.get_transactions(
             Modules.ACCOUNT,
@@ -189,7 +189,7 @@ class Accounts:
             block_type=block_type,
         )
 
-    def get_balance(self, address: str, tag: AccountsTags) -> str:
+    def get_balance(self, address: str, tag: AccountsTags) -> int:
         return self.get_balances([address], tag)[address]
 
     def get_balances(
@@ -213,7 +213,7 @@ class Accounts:
         start_block: int = 0,
         end_block: int = 99999999,
         page: int = 0,
-    ) -> NormalTransaction:
+    ) -> Union[None, NormalTransaction]:
         return com.generate_model(
             result_object=self._get_result(
                 address=address,
@@ -234,7 +234,7 @@ class Accounts:
         sort_order: Const = Const.SORT_ASC,
         start_block: int = 0,
         end_block: int = 99999999,
-    ) -> InternalTxnAddr:
+    ) -> Union[None, InternalTxnAddr]:
         return com.generate_model(
             result_object=self._get_result(
                 address=address,
@@ -250,7 +250,7 @@ class Accounts:
     def get_internal_transactions_by_hash(
         self,
         txhash: str,
-    ) -> InternalTxnHash:
+    ) -> Union[None, InternalTxnHash]:
         return com.generate_model(
             result_object=self._get_result(
                 hash=txhash,
@@ -266,7 +266,7 @@ class Accounts:
         sort: Const = Const.SORT_ASC,
         page: int = 0,
         limit: int = Const.RESP_LENGTH_LIMIT.value,
-    ) -> InternalTxnHash:
+    ) -> Union[None, InternalTxnHash]:
         return com.generate_model(
             result_object=self._get_result(
                 limit=limit,
@@ -286,7 +286,7 @@ class Accounts:
         page: int = 0,
         limit: int = Const.RESP_LENGTH_LIMIT.value,
         sort: Const = Const.SORT_ASC,
-    ) -> ERC20:
+    ) -> Union[None, ERC20]:
         return com.generate_model(
             result_object=self._get_result(
                 action=ApiActions.TOKENTX,
@@ -306,7 +306,7 @@ class Accounts:
         page: int = 0,
         limit: int = Const.RESP_LENGTH_LIMIT.value,
         sort: Const = Const.SORT_ASC,
-    ) -> ERC721:
+    ) -> Union[None, ERC721]:
         return com.generate_model(
             result_object=self._get_result(
                 action=ApiActions.TOKENNFTTX,
@@ -326,7 +326,7 @@ class Accounts:
         page: int = 0,
         limit: int = Const.RESP_LENGTH_LIMIT.value,
         sort: Const = Const.SORT_ASC,
-    ) -> ERC1155:
+    ) -> Union[None, ERC1155]:
         return com.generate_model(
             result_object=self._get_result(
                 action=ApiActions.TOKEN1155TX,
@@ -345,7 +345,7 @@ class Accounts:
         block_type: Const = Const.BLOCKTYPE_BLOCKS,
         page: int = 0,
         limit: int = Const.RESP_LENGTH_LIMIT.value,
-    ) -> BlockMined:
+    ) -> Union[None, BlockMined]:
         return com.generate_model(
             result_object=self._get_result(
                 action=ApiActions.GETMINEDBLOCKS,
