@@ -26,7 +26,7 @@ def get_response_result(url: str):
         if resp.json()["status"] == "1":
             return resp.json()["result"]
         else:
-            raise Exception(resp.json()["message"], resp.json())
+            raise Exception(resp.json()["message"], resp.json()["result"], resp.json())
     raise Exception("Api Error")
 
 
@@ -55,6 +55,9 @@ def get_transactions(
     contract_addresses: list = [],
     page: int = None,
     block_type: Const = None,
+    block_number: int = None,
+    timestamp: int = None,
+    closest: Const = None,
 ):
     f = get_base_url(module)
     build_param(f, ApiParams.ACTION.value, action.value)
@@ -68,11 +71,14 @@ def get_transactions(
     build_param(f, ApiParams.CONTRACTADDRS.value, ",".join(contract_addresses))
     build_param(f, ApiParams.PAGE.value, page)
     build_param(f, ApiParams.BLOCKTYPE.value, get_value(block_type))
+    build_param(f, ApiParams.BLOCKNO.value, block_number)
+    build_param(f, ApiParams.TIMESTAMP.value, timestamp)
+    build_param(f, ApiParams.CLOSEST.value, get_value(closest))
 
     try:
         return get_response_result(f.url)
     except Exception as e:
-        print(e.args[0])
+        print(e.args[0], e.args[1])
         return None
 
 

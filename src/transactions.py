@@ -1,5 +1,3 @@
-import json
-
 from pydantic import BaseModel
 
 import src.commons as com

@@ -16,6 +16,9 @@ class ApiParams(enum.Enum):
     CONTRACTADDRS = "contractaddresses"
     PAGE = "page"
     BLOCKTYPE = "blocktype"
+    BLOCKNO = "blockno"
+    CLOSEST = "closest"
+    TIMESTAMP = "timestamp"
 
 
 class AccountsTags(enum.Enum):
@@ -38,12 +41,16 @@ class ApiActions(enum.Enum):
     GETCONTRACTCREATION = "getcontractcreation"
     GETSTATUS = "getstatus"
     GETTXRECEIPTSTATUS = "gettxreceiptstatus"
+    GETBLOCKREWARD = "getblockreward"
+    GETBLOCKCOUNTDOWN = "getblockcountdown"
+    GETBLOCKNOBYTIME = "getblocknobytime"
 
 
 class Modules(enum.Enum):
     ACCOUNT = "account"
     CONTRACT = "contract"
     TRANSACTION = "transaction"
+    BLOCK = "block"
 
 
 class Const(enum.Enum):
@@ -53,3 +60,5 @@ class Const(enum.Enum):
     BLOCKTYPE_BLOCKS = "blocks"
     BLOCKTYPE_UNCLES = "uncles"
     RESP_LENGTH_LIMIT = 10_000
+    BLK_NUM_CLOSEST_BEFORE = "before"
+    BLK_NUM_CLOSEST_AFTER = "after"
