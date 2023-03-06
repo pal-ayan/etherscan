@@ -21,6 +21,12 @@ class ApiParams(enum.Enum):
     TIMESTAMP = "timestamp"
     FROMBLOCK = "fromBlock"
     TOBLOCK = "toBlock"
+    TOPIC_0 = "topic0"
+    TOPIC_1 = "topic1"
+    TOPIC_2 = "topic2"
+    TOPIC_3 = "topic3"
+    PARTIAL_PARAM_TOPIC = "topic"
+    PARTIAL_PARAM_OPER = "opr"
 
 
 class AccountsTags(enum.Enum):
@@ -67,3 +73,6 @@ class Const(enum.Enum):
     RESP_LENGTH_LIMIT_LOGS = 1_000
     BLK_NUM_CLOSEST_BEFORE = "before"
     BLK_NUM_CLOSEST_AFTER = "after"
+    OPERATOR_AND = "and"
+    OPERATOR_OR = "or"
+    UNDERSCORE = "_"

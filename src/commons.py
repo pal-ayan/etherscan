@@ -65,6 +65,13 @@ def build_param(f: furl, param: str, value=None):
     f.args[param] = value
 
 
+def build_param_from_dict(f: furl, topics: Union[dict[str, str], None] = None):
+    if topics is None:
+        return
+    for key, value in topics.items():
+        build_param(f, key, value)
+
+
 def get_value(value: Union[Const, None] = None) -> Union[None, str, int]:
     if value is None:
         return None
@@ -96,6 +103,8 @@ def get_transactions(
     fromBlock: Optional[int] = None,
     toBlock: Optional[int] = None,
     all_pages: Optional[int] = 0,
+    topics: Optional[dict[str, str]] = None,
+    topic_operators: Optional[dict[str, str]] = None,
 ):
     f = get_base_url(module)
     build_param(f, ApiParams.ACTION.value, action.value)
@@ -116,6 +125,8 @@ def get_transactions(
     build_param(f, ApiParams.CLOSEST.value, get_value(closest))
     build_param(f, ApiParams.FROMBLOCK.value, fromBlock)
     build_param(f, ApiParams.TOBLOCK.value, toBlock)
+    build_param_from_dict(f, topics)
+    build_param_from_dict(f, topic_operators)
 
     if all_pages == 0 and page == 0:
         if limit is not None and limit < Const.RESP_LENGTH_LIMIT.value:
