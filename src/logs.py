@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Optional, Union
+from typing import Any, List, Optional, Union
 
 import pydantic
 from pydantic import BaseModel
@@ -16,7 +16,7 @@ class TopicOperator(BaseModel):
 
     @pydantic.root_validator()
     @classmethod
-    def validate_input(cls, field_values):
+    def validate_input(cls, field_values: dict[str, Any]):
         assert (
             field_values["topic_a"] != field_values["topic_b"]
         ), "topics must be different"
@@ -65,7 +65,7 @@ class Logs:
     def _generate_operator_params(
         self, topic_operators: list[TopicOperator]
     ) -> dict[str, str]:
-        ret = {}
+        ret: dict[str, str] = {}
         for topic_operator in topic_operators:
             topic_a = topic_operator.topic_a.value
             topic_b = topic_operator.topic_b.value
@@ -125,8 +125,6 @@ class Logs:
                         than topic 1 and (topic 3 or 2), so for some odd
                         reason the sequence also matters.
         """
-
-        # self._validate_operator(operator)
         operator_params = {}
         input_topics_dict = {}
         if operators is not None:
