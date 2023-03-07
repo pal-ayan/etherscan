@@ -27,6 +27,7 @@ class ApiParams(enum.Enum):
     TOPIC_3 = "topic3"
     PARTIAL_PARAM_TOPIC = "topic"
     PARTIAL_PARAM_OPER = "opr"
+    GASPRICE = "gasprice"
 
 
 class AccountsTags(enum.Enum):
@@ -55,6 +56,8 @@ class ApiActions(enum.Enum):
     GETLOGS = "getLogs"
     TOKENSUPPLY = "tokensupply"
     TOKENBALANCE = "tokenbalance"
+    GASESTIMATE = "gasestimate"
+    GASORACLE = "gasoracle"
 
 
 class Modules(enum.Enum):
@@ -64,6 +67,7 @@ class Modules(enum.Enum):
     BLOCK = "block"
     LOGS = "logs"
     STATS = "stats"
+    GASTRACKER = "gastracker"
 
 
 class Const(enum.Enum):

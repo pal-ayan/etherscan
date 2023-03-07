@@ -126,7 +126,6 @@ class Logs:
                         reason the sequence also matters.
         """
 
-        # self._validate_operator(operator)
         operator_params = {}
         input_topics_dict = {}
         if operators is not None:

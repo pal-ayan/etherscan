@@ -108,6 +108,7 @@ def get_transactions(
     topics: Optional[dict[str, str]] = None,
     topic_operators: Optional[dict[str, str]] = None,
     tag: Optional[AccountsTags] = None,
+    gas_price: Optional[int] = None,
 ):
     f = get_base_url(module)
     build_param(f, ApiParams.ACTION.value, action.value)
@@ -129,6 +130,7 @@ def get_transactions(
     build_param(f, ApiParams.FROMBLOCK.value, fromBlock)
     build_param(f, ApiParams.TOBLOCK.value, toBlock)
     build_param(f, ApiParams.TAG.value, get_value(tag))
+    build_param(f, ApiParams.GASPRICE.value, gas_price)
     build_param_from_dict(f, topics)
     build_param_from_dict(f, topic_operators)
 
