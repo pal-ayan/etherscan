@@ -8,7 +8,7 @@ import requests
 from furl import furl
 from pydantic import BaseModel
 
-from src.enums import ApiActions, ApiParams, Const, Modules
+from src.enums import AccountsTags, ApiActions, ApiParams, Const, Modules
 
 
 def get_base_url(module: Modules) -> furl:
@@ -72,7 +72,9 @@ def build_param_from_dict(f: furl, topics: Union[dict[str, str], None] = None):
         build_param(f, key, value)
 
 
-def get_value(value: Union[Const, None] = None) -> Union[None, str, int]:
+def get_value(
+    value: Union[Const, AccountsTags, None] = None
+) -> Union[None, str, int]:
     if value is None:
         return None
     return value.value
@@ -105,6 +107,7 @@ def get_transactions(
     all_pages: Optional[int] = 0,
     topics: Optional[dict[str, str]] = None,
     topic_operators: Optional[dict[str, str]] = None,
+    tag: Optional[AccountsTags] = None,
 ):
     f = get_base_url(module)
     build_param(f, ApiParams.ACTION.value, action.value)
@@ -125,6 +128,7 @@ def get_transactions(
     build_param(f, ApiParams.CLOSEST.value, get_value(closest))
     build_param(f, ApiParams.FROMBLOCK.value, fromBlock)
     build_param(f, ApiParams.TOBLOCK.value, toBlock)
+    build_param(f, ApiParams.TAG.value, get_value(tag))
     build_param_from_dict(f, topics)
     build_param_from_dict(f, topic_operators)
 

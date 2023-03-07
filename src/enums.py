@@ -53,6 +53,8 @@ class ApiActions(enum.Enum):
     GETBLOCKCOUNTDOWN = "getblockcountdown"
     GETBLOCKNOBYTIME = "getblocknobytime"
     GETLOGS = "getLogs"
+    TOKENSUPPLY = "tokensupply"
+    TOKENBALANCE = "tokenbalance"
 
 
 class Modules(enum.Enum):
@@ -61,6 +63,7 @@ class Modules(enum.Enum):
     TRANSACTION = "transaction"
     BLOCK = "block"
     LOGS = "logs"
+    STATS = "stats"
 
 
 class Const(enum.Enum):
