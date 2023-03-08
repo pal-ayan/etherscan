@@ -58,6 +58,11 @@ class ApiActions(enum.Enum):
     TOKENBALANCE = "tokenbalance"
     GASESTIMATE = "gasestimate"
     GASORACLE = "gasoracle"
+    ETHSUPPLY = "ethsupply"
+    ETHSUPPLY2 = "ethsupply2"
+    ETHPRICE = "ethprice"
+    CHAINSIZE = "chainsize"
+    NODECOUNT = "nodecount"
 
 
 class Modules(enum.Enum):
