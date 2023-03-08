@@ -1,7 +1,9 @@
+import datetime
+import enum
 import json
 import os
 import zlib
-from typing import Any, Collection, Optional, Type, Union
+from typing import Any, Collection, Literal, Optional, Type, Union
 
 import pandas as pd
 import requests
@@ -72,9 +74,18 @@ def build_param_from_dict(f: furl, topics: Union[dict[str, str], None] = None):
         build_param(f, key, value)
 
 
-def get_value(
-    value: Union[Const, AccountsTags, None] = None
-) -> Union[None, str, int]:
+def build_date_param(
+    f: furl, param: str, value: Union[datetime.date, None] = None
+):
+    if value is None:
+        return
+    elif isinstance(value, datetime.date):
+        f.args[param] = value.strftime(r"%Y-%m-%d")
+    else:
+        raise ValueError("invalid object type")
+
+
+def get_value(value: Union[enum.Enum, None] = None) -> Union[None, str, int]:
     if value is None:
         return None
     return value.value
@@ -90,8 +101,8 @@ def get_transactions(
     module: Modules,
     action: ApiActions,
     address: Optional[str] = None,
-    sort_order: Optional[Const] = None,
     limit: Optional[int] = None,
+    sort_order: Optional[Literal[Const.SORT_ASC, Const.SORT_DESC]] = None,
     start_block: Optional[int] = None,
     end_block: Optional[int] = None,
     hash: Optional[str] = None,
@@ -109,6 +120,20 @@ def get_transactions(
     topic_operators: Optional[dict[str, str]] = None,
     tag: Optional[AccountsTags] = None,
     gas_price: Optional[int] = None,
+    start_date: Optional[datetime.date] = None,
+    end_date: Optional[datetime.date] = None,
+    client_type: Optional[
+        Literal[
+            Const.CLIENTTYPE_GETH,
+            Const.CLIENTTYPE_PARITY,
+        ]
+    ] = None,
+    sync_mode: Optional[
+        Literal[
+            Const.SYNCMODE_ARCHIVE,
+            Const.SYNCMODE_DEFAULT,
+        ]
+    ] = None,
 ):
     f = get_base_url(module)
     build_param(f, ApiParams.ACTION.value, action.value)
@@ -116,7 +141,6 @@ def get_transactions(
     build_param(f, ApiParams.STARTBLOCK.value, start_block)
     build_param(f, ApiParams.ENDBLOCK.value, end_block)
     build_param(f, ApiParams.OFFSET.value, limit)
-    build_param(f, ApiParams.SORT.value, get_value(sort_order))
     build_param(f, ApiParams.HASH.value, hash)
     build_param(f, ApiParams.CONTRACTADDR.value, contract_address)
     build_param(
@@ -133,6 +157,11 @@ def get_transactions(
     build_param(f, ApiParams.GASPRICE.value, gas_price)
     build_param_from_dict(f, topics)
     build_param_from_dict(f, topic_operators)
+    build_date_param(f, ApiParams.STARTDATE.value, start_date)
+    build_date_param(f, ApiParams.ENDDATE.value, end_date)
+    build_param(f, ApiParams.CLIENTTYPE.value, get_value(client_type))
+    build_param(f, ApiParams.SYNCMODE.value, get_value(sync_mode))
+    build_param(f, ApiParams.SORT.value, get_value(sort_order))
 
     if all_pages == 0 and page == 0:
         if limit is not None and limit < Const.RESP_LENGTH_LIMIT.value:

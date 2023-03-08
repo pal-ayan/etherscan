@@ -28,6 +28,10 @@ class ApiParams(enum.Enum):
     PARTIAL_PARAM_TOPIC = "topic"
     PARTIAL_PARAM_OPER = "opr"
     GASPRICE = "gasprice"
+    STARTDATE = "startdate"
+    ENDDATE = "enddate"
+    CLIENTTYPE = "clienttype"
+    SYNCMODE = "syncmode"
 
 
 class AccountsTags(enum.Enum):
@@ -88,3 +92,7 @@ class Const(enum.Enum):
     OPERATOR_AND = "and"
     OPERATOR_OR = "or"
     UNDERSCORE = "_"
+    CLIENTTYPE_GETH = "geth"
+    CLIENTTYPE_PARITY = "parity"
+    SYNCMODE_DEFAULT = "default"
+    SYNCMODE_ARCHIVE = "archive"

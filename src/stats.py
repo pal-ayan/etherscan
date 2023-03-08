@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 import datetime
-from typing import Union
+from typing import List, Literal, Union
 
 from pydantic import BaseModel
 
 import src.commons as com
-from src.enums import ApiActions, Modules
+from src.enums import ApiActions, Const, Modules
 
 
 class ETH2(BaseModel):
@@ -25,6 +25,18 @@ class ETHPrice(BaseModel):
 class NodeCount(BaseModel):
     UTCDate: datetime.date
     TotalNodeCount: int
+
+
+class NodeSizeItem(BaseModel):
+    blockNumber: int
+    chainTimeStamp: datetime.date
+    chainSize: int
+    clientType: str
+    syncMode: str
+
+
+class EthNodeSize(BaseModel):
+    __root__: List[NodeSizeItem]
 
 
 class Stats:
@@ -62,4 +74,25 @@ class Stats:
                 module=Modules.STATS, action=ApiActions.NODECOUNT
             ),
             NodeCount,
+        )
+
+    def get_eth_nodes_size(
+        self,
+        start_date: datetime.date,
+        end_date: datetime.date,
+        client_type: Literal[Const.CLIENTTYPE_GETH, Const.CLIENTTYPE_PARITY],
+        sort: Literal[Const.SORT_ASC, Const.SORT_DESC],
+        sync_mode: Literal[Const.SYNCMODE_ARCHIVE, Const.SYNCMODE_DEFAULT],
+    ) -> Union[None, EthNodeSize]:
+        return com.generate_model(
+            com.get_transactions(
+                module=Modules.STATS,
+                action=ApiActions.CHAINSIZE,
+                start_date=start_date,
+                end_date=end_date,
+                client_type=client_type,
+                sort_order=sort,
+                sync_mode=sync_mode,
+            ),
+            EthNodeSize,
         )

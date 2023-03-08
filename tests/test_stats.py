@@ -1,6 +1,7 @@
+import datetime
 import unittest
 
-from src.enums import *
+from src.enums import Const
 from src.stats import Stats
 
 
@@ -26,8 +27,19 @@ class TestStats(unittest.TestCase):
         print(resp.json())
         self.assertIsNotNone(resp)
 
-    # @unittest.skip
+    @unittest.skip
     def test_total_nodes_count(self):
         resp = self.sts.get_total_nodes_count()
+        print(resp.json())
+        self.assertIsNotNone(resp.json())
+
+    def test_nodes_size(self):
+        resp = self.sts.get_eth_nodes_size(
+            start_date=datetime.date(year=2019, month=2, day=1),
+            end_date=datetime.date(year=2019, month=2, day=28),
+            client_type=Const.CLIENTTYPE_GETH,
+            sync_mode=Const.SYNCMODE_DEFAULT,
+            sort=Const.SORT_ASC,
+        )
         print(resp.json())
         self.assertIsNotNone(resp.json())
