@@ -1,4 +1,4 @@
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Literal
 
 from pydantic import BaseModel, Field
 
@@ -166,7 +166,7 @@ class Accounts:
         self,
         action: ApiActions,
         address: Optional[str] = None,
-        sort_order: Optional[Const] = None,
+        sort_order: Literal[Const.SORT_ASC, Const.SORT_DESC] = Const.SORT_ASC,
         limit: Optional[int] = None,
         start_block: Optional[int] = None,
         end_block: Optional[int] = None,
@@ -209,7 +209,7 @@ class Accounts:
         self,
         address: str,
         limit: int = Const.RESP_LENGTH_LIMIT.value,
-        sort_order: Const = Const.SORT_ASC,
+        sort_order: Literal[Const.SORT_ASC, Const.SORT_DESC] = Const.SORT_ASC,
         start_block: int = 0,
         end_block: int = 99999999,
         page: int = 0,
@@ -231,7 +231,7 @@ class Accounts:
         self,
         address: str,
         limit: int = Const.RESP_LENGTH_LIMIT.value,
-        sort_order: Const = Const.SORT_ASC,
+        sort_order: Literal[Const.SORT_ASC, Const.SORT_DESC] = Const.SORT_ASC,
         start_block: int = 0,
         end_block: int = 99999999,
     ) -> Union[None, InternalTxnAddr]:
@@ -263,7 +263,7 @@ class Accounts:
         self,
         start_block: int,
         end_block: int,
-        sort: Const = Const.SORT_ASC,
+        sort: Literal[Const.SORT_ASC, Const.SORT_DESC] = Const.SORT_ASC,
         page: int = 0,
         limit: int = Const.RESP_LENGTH_LIMIT.value,
     ) -> Union[None, InternalTxnHash]:
@@ -285,7 +285,7 @@ class Accounts:
         contract_address: str,
         page: int = 0,
         limit: int = Const.RESP_LENGTH_LIMIT.value,
-        sort: Const = Const.SORT_ASC,
+        sort: Literal[Const.SORT_ASC, Const.SORT_DESC] = Const.SORT_ASC,
     ) -> Union[None, ERC20]:
         return com.generate_model(
             result_object=self._get_result(
@@ -305,7 +305,7 @@ class Accounts:
         contract_address: str,
         page: int = 0,
         limit: int = Const.RESP_LENGTH_LIMIT.value,
-        sort: Const = Const.SORT_ASC,
+        sort: Literal[Const.SORT_ASC, Const.SORT_DESC] = Const.SORT_ASC,
     ) -> Union[None, ERC721]:
         return com.generate_model(
             result_object=self._get_result(
@@ -325,7 +325,7 @@ class Accounts:
         contract_address: str,
         page: int = 0,
         limit: int = Const.RESP_LENGTH_LIMIT.value,
-        sort: Const = Const.SORT_ASC,
+        sort: Literal[Const.SORT_ASC, Const.SORT_DESC] = Const.SORT_ASC,
     ) -> Union[None, ERC1155]:
         return com.generate_model(
             result_object=self._get_result(
