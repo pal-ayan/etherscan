@@ -2,4 +2,4 @@
 
 ## Overview
 
-Implementations of all free api endpoints in python as a typer application
+Implementations of all free api endpoints as a python package
